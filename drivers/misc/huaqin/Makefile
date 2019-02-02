@@ -1,1 +1,0 @@
-obj-$(CONFIG_HQ_HARDWARE_INFO)	+= hardwareinfo/
