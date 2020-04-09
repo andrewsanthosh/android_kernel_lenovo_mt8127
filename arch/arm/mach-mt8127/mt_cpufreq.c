@@ -115,29 +115,29 @@ static struct early_suspend mt_cpufreq_early_suspend_handler =
 #define DVFS_F4     ( 598000)   // KHz
 
 #if defined(HQA_LV_1_09V)
-    #define DVFS_V0     (1250)  // mV
+    #define DVFS_V0     (1200)  // mV
     #define DVFS_V1     (1150)  // mV
     #define DVFS_V2     (1090)  // mV
     #define DVFS_V3     (1090)  // mV
 #elif defined(HQA_NV_1_15V)
-    #define DVFS_V0     (1300)  // mV
+    #define DVFS_V0     (1260)  // mV
     #define DVFS_V1     (1200)  // mV
     #define DVFS_V2     (1150)  // mV
     #define DVFS_V3     (1050)  // mV /*Not used */
 #elif defined(HQA_HV_1_21V)
-    #define DVFS_V0     (1330)  // mV
+    #define DVFS_V0     (1320)  // mV
     #define DVFS_V1     (1210)  // mV
     #define DVFS_V2     (1150)  // mV /*Not used */
     #define DVFS_V3     (1050)  // mV /*Not used */
 #else /* Normal case */
-    #define DVFS_V0     (1325)  // mV
-    #define DVFS_V1     (1225)  // mV
+    #define DVFS_V0     (1300)  // mV
+    #define DVFS_V1     (1200)  // mV
     #ifdef CPUFREQ_SDIO_TRANSFER
-    #define DVFS_V2_0   (1195)  // mV
+    #define DVFS_V2_0   (1185)  // mV
     #endif
-    #define DVFS_V2     (1125)  // mV
+    #define DVFS_V2     (1150)  // mV
     #ifdef MT_DVFS_LOW_VOLTAGE_SUPPORT
-    #define DVFS_V3     (1000)  // mV
+    #define DVFS_V3     (1050)  // mV
     #endif
 #endif
 
@@ -186,7 +186,7 @@ static unsigned int g_cpu_power_table_num = 0;
 
 static int g_ramp_down_count = 0;
 
-static bool mt_cpufreq_debug = true;
+static bool mt_cpufreq_debug = false;
 static bool mt_cpufreq_ready = false;
 static bool mt_cpufreq_pause = false;
 static bool mt_cpufreq_ptpod_disable = false;
@@ -249,8 +249,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
 };
 #elif defined(HQA_NV_1_15V)
 static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
-	OP(DVFS_F0_1, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F0, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V2),
@@ -259,8 +257,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
 };
 #elif defined(HQA_HV_1_21V)
 static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
-	OP(DVFS_F0_1, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F0, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V1),
@@ -269,8 +265,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
 };
 #else /* Normal case */
 static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
-	OP(DVFS_F0_1, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F0, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V2),
@@ -284,8 +278,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1[] = {
 #endif
 #ifdef CPUSTRESS_VPROC_1_25V_GPU_500MHZ_1BUCK
 static struct mt_cpu_freq_info mt8127_freqs_e1_gpu[] = {
-	OP(DVFS_F0_1, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F0, DVFS_V0),
     OP(DVFS_F1, DVFS_V0),
     OP(DVFS_F2, DVFS_V0),
@@ -299,7 +291,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_gpu[] = {
 #endif 
 static struct mt_cpu_freq_info mt8127_freqs_e1_1[] = {
     OP(DVFS_F0_1, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V2),
     OP(DVFS_F3, DVFS_V2),
@@ -312,7 +303,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_1[] = {
 
 static struct mt_cpu_freq_info mt8127_freqs_e1_2[] = {
     OP(DVFS_F0_2, DVFS_V0),
-	OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V2),
     OP(DVFS_F3, DVFS_V2),
@@ -336,7 +326,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_3[] = {
 };
 #if 0 //TOFIX: temp for build warning
 static struct mt_cpu_freq_info mt8127_freqs_e1_3_gpu[] = {
-	OP(DVFS_F0_1, DVFS_V0),
     OP(DVFS_F0_3, DVFS_V0),
     OP(DVFS_F1, DVFS_V0),
     OP(DVFS_F2, DVFS_V0),
@@ -350,7 +339,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_3_gpu[] = {
 #endif 
 
 static struct mt_cpu_freq_info mt8127_freqs_e1_4[] = {
-	OP(DVFS_F0_1, DVFS_V0),
     OP(DVFS_F0_4, DVFS_V0),
     OP(DVFS_F1, DVFS_V1),
     OP(DVFS_F2, DVFS_V2),
@@ -363,7 +351,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_4[] = {
 };
 
 static struct mt_cpu_freq_info mt8127_freqs_e1_5[] = {
-	OP(DVFS_F0_1, DVFS_V0),
     OP(DVFS_F1_0, DVFS_V1),               
     OP(DVFS_F2, DVFS_V2),
     OP(DVFS_F3, DVFS_V2),
@@ -375,7 +362,6 @@ static struct mt_cpu_freq_info mt8127_freqs_e1_5[] = {
 };
 
 static struct mt_cpu_freq_info mt8127_freqs_e1_6[] = {
-	OP(DVFS_F0_2, DVFS_V0),
     OP(DVFS_F1_1, DVFS_V1),               
     OP(DVFS_F2, DVFS_V2),
     OP(DVFS_F3, DVFS_V2),
@@ -552,13 +538,13 @@ static unsigned int mt_cpufreq_volt_to_pmic_wrap(unsigned int target_volt)
     {
         switch (target_volt)
         {
-            case DVFS_V0:
+            case DVFS_V1:
                 idx = 0;  // spm_dvfs_ctrl_volt(0);
                 break;
-            case DVFS_V1:
+            case DVFS_V2:
                 idx = 1;  // spm_dvfs_ctrl_volt(1);
                 break;
-            case DVFS_V2:
+            case DVFS_V3:
                 idx = 2;  // spm_dvfs_ctrl_volt(2);
                 break;
             case DVFS_V4:
@@ -1609,7 +1595,7 @@ static int mt_cpufreq_init(struct cpufreq_policy *policy)
     policy->cpuinfo.max_freq = g_max_freq_by_ptp;
     policy->cpuinfo.min_freq = DVFS_F4;
 
-    policy->cur = DVFS_F0_1;  /* Default 1.05GHz in preloader */
+    policy->cur = DVFS_F2;  /* Default 1.05GHz in preloader */
     policy->max = g_max_freq_by_ptp;
     policy->min = DVFS_F4;
 
